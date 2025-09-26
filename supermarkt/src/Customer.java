@@ -8,6 +8,7 @@ public class Customer {
         this.name = name;
     }
 
+
     public void goToSuperMarket(SuperMarket supermarket) {
         if (supermarket == null) {
             throw new IllegalArgumentException("Store/Supermarket can't be null");
@@ -18,7 +19,7 @@ public class Customer {
     public void buyItem(String productName, int amount) {
         for (int i = 0; i < supermarket.productList.size(); i++) {
             if (productName.equalsIgnoreCase(supermarket.productList.get(i).name)) {
-                supermarket.sellItem(supermarket.productList.get(i), amount);
+                SuperMarket.sellItem(supermarket.productList.get(i), amount);
                 return;
             }
         }

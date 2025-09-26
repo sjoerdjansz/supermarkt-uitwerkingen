@@ -1,3 +1,17 @@
+private static SuperMarket pickStore(Scanner scanner, Map<String, SuperMarket> stores, String prompt) {
+    System.out.println(prompt);
+    System.out.println("[Health Mart] -- [Browns Bakery] -- [Fresh Greens]");
+
+    String input = scanner.nextLine().trim();
+
+    SuperMarket store = stores.get(input);
+
+    if (store == null) {
+        System.out.println("Unknown store: " + input);
+    }
+    return store;
+}
+
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 void main() {
@@ -31,31 +45,76 @@ void main() {
 
     String customerName;
     String productName;
-    String store;
     int amount;
 
     System.out.println("What is your name?");
     customerName = scanner.nextLine().trim();
+
     Customer newCustomer = new Customer(customerName);
 
-    System.out.println("Which store would you like to visit?");
-    System.out.println("[Health Mart] -- [Browns Bakery] -- [Fresh Greens]");
-    store = scanner.nextLine().trim();
-    System.out.println("STORE TYPED: " + store);
+    boolean isShopping = true;
 
-    newCustomer.goToSuperMarket(stores.get(store));
 
-    System.out.println("What would you like to buy?");
-    stores.get(store).showInventory();
+    while (isShopping) {
+        System.out.println("What do you want to do?");
+        System.out.println("1 - Pick a store");
+        System.out.println("2 - Buy something");
+        System.out.println("3 - Restock a product");
+        System.out.println("4 - Exit");
 
-    productName = scanner.nextLine().trim();
+        int choice = scanner.nextInt();
 
-    System.out.println("How many " + productName + " would you like?" );
-    amount = scanner.nextInt();
-    scanner.nextLine();
+        scanner.nextLine();
 
-    newCustomer.buyItem(productName, amount);
+        switch (choice) {
+            case 1: {
+                SuperMarket storeChoice = pickStore(scanner, stores, "Which store do you want to go to?");
+                if (storeChoice != null) {
+                    newCustomer.goToSuperMarket(storeChoice);
+                    System.out.println("Welcome to " + storeChoice.name);
+                }
+                break;
+            }
+            case 2:
+                SuperMarket store = newCustomer.supermarket;
+                if (store == null) {
+                    System.out.println("Pick a store first");
+                    break;
+                }
 
-//    stores.get(store).reStockItem(productName, amount);
+                System.out.println("Which product do you want to buy?");
+                store.showInventory();
 
+                productName = scanner.nextLine().trim();
+
+                System.out.println("How many " + productName + " would you like?");
+                amount = scanner.nextInt();
+                scanner.nextLine();
+                newCustomer.buyItem(productName, amount);
+                break;
+            case 3: {
+                SuperMarket storeChoice = pickStore(scanner, stores,
+                                                    "Which store would you like to restock?");
+                if (storeChoice != null) {
+                    newCustomer.goToSuperMarket(storeChoice);
+                    System.out.println("Which item do you want to restock?");
+                    storeChoice.showInventory();
+                    String item = scanner.nextLine();
+                    System.out.println("How many " + item + " would you like to restock?");
+                    amount = scanner.nextInt();
+                    scanner.nextLine();
+                    storeChoice.reStockItem(item, amount);
+                }
+                break;
+            }
+            case 4:
+                System.out.println("Thanks for shopping with us " + customerName);
+                isShopping = false;
+                break;
+            default:
+                System.out.println("Invalid input. Try again.");
+                break;
+        }
+
+    }
 }

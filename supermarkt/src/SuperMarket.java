@@ -1,4 +1,3 @@
-import java.sql.PreparedStatement;
 import java.util.List;
 
 import static java.lang.System.in;
@@ -18,7 +17,7 @@ public class SuperMarket {
     }
 
     // helper method
-    public  void sellItem(Product product, int amount) {
+    public static void sellItem(Product product, int amount) {
         if (amount <= 0) {
             System.out.println("Can't buy nothing...");
             return;
@@ -30,7 +29,7 @@ public class SuperMarket {
                     " euro total.");
             product.amount = product.amount - amount;
             System.out.println(product.amount + " left in stock.");
-            reStockItem(product.name, amount);
+
         } else {
             System.out.println(
                     "You cannot buy " + amount + " " + product.name + ", we only have " + product.amount +
@@ -43,7 +42,7 @@ public class SuperMarket {
             if (productName.equalsIgnoreCase(this.productList.get(i).name)) {
                 System.out.println("Product found: " + productName);
                 this.productList.get(i).amount += amount;
-                System.out.println(productName + " restocked by " + amount);
+                System.out.println(productName + " restocked with " + amount);
                 return;
             }
         }
