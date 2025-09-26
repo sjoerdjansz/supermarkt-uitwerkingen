@@ -1,42 +1,36 @@
+import java.sql.PreparedStatement;
+import java.util.List;
+
+import static java.lang.System.in;
+
 public class SuperMarket {
 
-    Product bread;
-    Product fruit;
-    Product toiletPaper;
-    Product cheese;
+    String name;
+    List<Product> productList;
 
-    public SuperMarket(Product bread, Product fruit, Product toiletPaper, Product cheese) {
-        if (bread == null) {
-            throw new IllegalArgumentException("Bread can't be null!");
-        }
-        if (fruit == null) {
-            throw new IllegalArgumentException("Fruit can't be null!");
-        }
-        if (toiletPaper == null) {
-            throw new IllegalArgumentException("Toilet paper can't be null!");
-        }
-        if (cheese == null) {
-            throw new IllegalArgumentException("Cheese can't be null!");
+    public SuperMarket(String name, List<Product> productList) {
+        if (productList == null) {
+            throw new IllegalArgumentException("List can't be null!");
         }
 
-        this.bread = bread;
-        this.fruit = fruit;
-        this.toiletPaper = toiletPaper;
-        this.cheese = cheese;
+        this.name = name;
+        this.productList = productList;
     }
 
     // helper method
-    public static void buyItem(Product product, int amount) {
+    public  void sellItem(Product product, int amount) {
         if (amount <= 0) {
             System.out.println("Can't buy nothing...");
             return;
         }
         if (amount <= product.amount) {
+            double totalCost = Math.round(product.price * amount * 100.0) / 100.0;
             System.out.println(
-                    "You bought " + amount + " " + product.name + " for " + product.price * amount +
+                    "You bought " + amount + " " + product.name + " for " + totalCost +
                     " euro total.");
             product.amount = product.amount - amount;
             System.out.println(product.amount + " left in stock.");
+            reStockItem(product.name, amount);
         } else {
             System.out.println(
                     "You cannot buy " + amount + " " + product.name + ", we only have " + product.amount +
@@ -44,20 +38,23 @@ public class SuperMarket {
         }
     }
 
-    public void buyBread(int amount) {
-        buyItem(this.bread, amount);
+    public void reStockItem(String productName, int amount) {
+        for (int i = 0; i < this.productList.size(); i++) {
+            if (productName.equalsIgnoreCase(this.productList.get(i).name)) {
+                System.out.println("Product found: " + productName);
+                this.productList.get(i).amount += amount;
+                System.out.println(productName + " restocked by " + amount);
+                return;
+            }
+        }
+        System.out.println("Product not found, can't restock item because " + productName +
+                           " is not available in this store.");
     }
 
-    public void buyFruit(int amount) {
-        buyItem(this.fruit, amount);
-    }
-
-    public void buyToiletPaper(int amount) {
-        buyItem(this.toiletPaper, amount);
-    }
-
-    public void buyCheese(int amount) {
-        buyItem(this.cheese, amount);
+    public void showInventory() {
+        for (Product product : this.productList) {
+            System.out.println(product.name);
+        }
     }
 
 }
