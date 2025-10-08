@@ -1,0 +1,16 @@
+# IntelliJ IDEA project files
+.idea/
+*.iml
+
+# Build output (als je via IntelliJ runt)
+out/
+
+# Logs
+*.log
+
+# OS-specifieke bestanden
+.DS_Store
+Thumbs.db
+
+# Gecompileerde Java classes
+*.class
